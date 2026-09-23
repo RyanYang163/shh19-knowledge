@@ -1,13 +1,13 @@
 # Knowledge Base（知识库阅读器）
 
-> TOS 7 Deb 单包应用 · WebUI 内嵌（iframe）· 版本 **1.0.0**
+> TOS 7 Deb 单包应用 · WebUI 内嵌（iframe）· 版本 **1.0.1**
 
 | 项 | 值 |
 |---|---|
 | 应用 ID | `shh19-knowledge` |
 | 包类型 | Deb 单包（`application_type: "deb"`） |
 | 打开方式 | WebUI 内嵌（`type: "iframe"`，`path: "/shh19-knowledge/"`） |
-| 版本 | 1.0.0 |
+| 版本 | 1.0.1 |
 | 分类 | `Utilities`, `Web_Services` |
 | 发布者 | shh |
 | 开发者仓库 | <https://github.com/RyanYang163/shh19-knowledge> |
@@ -89,7 +89,7 @@ Python 3、nginx 与 systemd，任何 Node 依赖都会变成「command not foun
 | 文件系统：`/Volume*/@apps/shh19-knowledge/data` | 运行期数据 | 唯一的写入位置 |
 | 文件系统：用户加入白名单的目录 | 读取用户文件 | **只读**；白名单初始为空，必须由用户显式添加 |
 | 系统用户：`shh19knowledge` | 隔离运行 | 由平台创建（`postinst` 幂等兜底）；**非 root** |
-| `CAP_DAC_OVERRIDE` | 读取不属于应用用户的共享文件夹文件 | ⚠️ **见下方「关于 CAP_DAC_OVERRIDE」** |
+| `CAP_DAC_OVERRIDE` | 在 `/var/api`（`755 root:root`）里创建自家 Unix socket | ⚠️ **见下方「关于 CAP_DAC_OVERRIDE」** |
 | 共享文件夹 / 容器 / 特权 | 不使用 | 非 Docker 应用，不使用 `privileged`、不使用 `network_mode: host` |
 
 资源上限（systemd 单元内声明）：`MemoryMax=1024M`、`CPUQuota=200%`、
@@ -100,17 +100,23 @@ Python 3、nginx 与 systemd，任何 Node 依赖都会变成「command not foun
 systemd 单元声明了 `AmbientCapabilities=CAP_DAC_OVERRIDE` 与
 `CapabilityBoundingSet=CAP_DAC_OVERRIDE`。**这是有意为之，也必须如实说明**：
 
-- **为什么需要**：本应用要读取**用户自己**的共享文件夹里的文件，而这些文件通常不属于
-  应用专用用户 `shh19knowledge`。若不加这个能力，应用会因 `EACCES` 读不到任何文件 ——
-  一个只读知识库读不到文件等于完全不可用。
-- **它的作用范围**：只绕过**文件系统的权限位检查**。应用仍然：
-  不联网、不监听网络端口、不加载内核模块、不访问设备节点、不修改任何文件、
-  不写 `/etc` `/usr` `/boot`，且写入路径被 `ReadWritePaths` 限制在安装目录与 `/var/api`。
-- **风险边界**：该能力让进程在**文件读取**上不受 DAC 限制。换句话说，**本应用的用户
-  是白名单**，而不是文件权限位。因此白名单必须是你的真实意图 —— 只把确实希望
-  本应用读取的目录加进去。
-- 如果你不接受这一点，可以不做任何配置就卸载本应用；或在使用前把共享文件夹的读取
-  权限授予 `shh19knowledge` 用户与组，然后由管理员从单元文件中移除这两行。
+- **为什么需要**：平台要求 iframe 应用把 Unix socket 建在 `/var/api/<appid>.sock`
+  （指引 8.7.1），而 TOS 上 **`/var/api` 是 `/tmp/api` 的软链，权限是 `755 root:root`** ——
+  非 root 的应用用户**既不能在里建文件也不能 unlink**（真机实测 `touch` 与
+  `socket.bind()` 都是 `Permission denied`）。没有这个能力时，服务会以
+  `status=1/FAILURE` 反复重启、socket 永不出现，应用彻底不可用。
+- **它换来了什么**：服务 `active`，socket 建成且属主与权限完全符合规范
+  （`srw-rw---- shh19knowledge:shh19knowledge`，mode `0660`）。
+- **安全性上是净减少而非放松**：`CapabilityBoundingSet=CAP_DAC_OVERRIDE` 把能力集
+  从内核默认的 **41 个收窄到 1 个**。授予的那一个正好是「在平台自有的 `/var/api` 里
+  创建自家 socket」所必需的 —— 即指引 12.7 要求的
+  「drop all capabilities, add only the required ones」写法。
+- **它的作用范围**：只绕过**文件系统的权限位检查**。应用仍然：不联网、不监听网络端口、
+  不加载内核模块、不访问设备节点、不修改任何文件、不写 `/etc` `/usr` `/boot`，
+  且写入路径被 `ReadWritePaths` 限制在安装目录与 `/var/api`。
+- 若管理员出于更严的策略不接受它，替代方案是把 `/var/api` 的属主或权限改为允许
+  应用用户写入（例如为应用建立子目录或加 ACL），然后从单元文件中移除这两行 ——
+  但这属于偏离平台默认布局，需自行承担。
 
 ## 运行时写入路径清单（指引 12.9.6）
 
@@ -225,8 +231,9 @@ sudo rm -rf /Volume*/@apps/shh19-knowledge
   `ProtectControlGroups`、`RestrictRealtime`、`RestrictSUIDSGID`、`LockPersonality`、
   `RemoveIPC`、`SystemCallArchitectures=native`；可写路径用 `ReadWritePaths` 显式枚举
   （仅安装目录与 `/var/api`）。**不启用 `PrivateTmp`**，原因见上文。
-- **能力集最小化**：只声明 `CAP_DAC_OVERRIDE` 一项（用途与风险见上文专节），
-  且 `CapabilityBoundingSet` 同样只限这一项。
+- **能力集最小化**：只声明 `CAP_DAC_OVERRIDE` 一项（用途见上文专节），
+  且 `CapabilityBoundingSet` 同样只限这一项 —— 实际效果是把内核默认的 41 个能力
+  **收窄到 1 个**，属净减少。
 - **无 shell 执行入口**：所有接口都是固定命名的具体能力，不存在
   `POST /exec` 这类接受任意命令行的入口，应用也从不调用任何外部程序。
 - **路径双层校验**：所有用户文件访问都经过唯一收口 `app/kbs.py::resolve_in_kb` ——
@@ -249,7 +256,8 @@ sudo rm -rf /Volume*/@apps/shh19-knowledge
 - [ ] `216/GROUP` 与 `226/NAMESPACE` 两项是否已彻底规避
 - [ ] 目标机上 Python 3.10 的 `sqlite3` 是否编译了 **FTS5**（未编译时应用照常启动、
       搜索自动降级为模糊匹配，`/api/status` 会给出 `fts5: false` 与降级原因）
-- [ ] `CAP_DAC_OVERRIDE` 是否足以读取 `/Volume*/` 下的共享文件夹（若不足，需要另配 ACL）
+- [ ] `CAP_DAC_OVERRIDE` 是否足以在 `/var/api` 建出 socket（同批应用已在真机验证过这条，本应用沿用同一配置）
+- [ ] 读取 `/Volume*/` 下**不属于应用用户**的共享文件夹文件是否成功（若因权限读不到，用户需为该目录授予读取权限或加 ACL；本应用不会绕过这一点去改文件属主）
 - [ ] 大目录（10 万文件）的扫描耗时与文件树展开响应
 - [ ] 中文/繁体/日文/韩文编码文档、中文文件名、超长路径
 - [ ] 含 JPEG2000 图像的 PDF、未嵌入 CID 字体的中文 PDF 的实际渲染效果

@@ -6,7 +6,7 @@
 
 **公网地址 / Public URL**：<https://github.com/RyanYang163/shh19-knowledge/blob/main/PRIVACY.md>
 **生效日期 / Effective date**：2026-09-23
-**适用版本 / Applies to**：1.0.0
+**适用版本 / Applies to**：1.0.1
 **开发者 / Publisher**：shh
 **包名 / Package**：`shh19-knowledge`
 **软件类型 / Type**：TerraMaster TOS 7 Deb 应用（WebUI 内嵌 / iframe）
@@ -89,7 +89,12 @@
   并在每次启动时清空残留；
 - 可写路径以 `ReadWritePaths` 显式枚举（仅安装目录与 `/var/api`），不写 `/etc`、`/usr`、`/boot`；
 - 进程间通信只经 Unix socket（`/var/api/shh19-knowledge.sock`，mode `0660`），
-  **不监听任何宿主网络端口**。
+  **不监听任何宿主网络端口**；
+- 为能在平台的 `/var/api`（`755 root:root`，非 root 用户不可写）里创建该 socket，
+  单元声明了 `AmbientCapabilities=CAP_DAC_OVERRIDE` 与 `CapabilityBoundingSet=CAP_DAC_OVERRIDE`。
+  这**不是**用来放宽对你的文件的访问（你的文件访问始终受白名单与 `realpath` 校验约束），
+  而是平台 socket 目录权限所必需。该写法把内核默认的 41 个能力**收窄到 1 个**，
+  属净减少；详见 `README.md` 的「关于 `CAP_DAC_OVERRIDE`」专节。
 
 **数据访问控制**
 
