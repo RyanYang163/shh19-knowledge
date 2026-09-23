@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-app-id="shh19-knowledge">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>知识库阅读器</title>
+<!--
+  全部资源用**相对路径**引用，并带 ?v= 版本参数：
+    · 相对路径 —— 应用会被平台挂在 /<appid>/ 或 /v2/proxy/<appid>/ 下，
+      写死绝对路径会导致白屏（审核项 F7）。
+    · ?v= 版本参数 —— 升级后不会读到旧缓存（指引 8.8）。
+  另外：框架的响应固定带 Cache-Control: no-store，HTTP 缓存指望不上，
+  所以内容 URL 上都带 ?v=<mtime_ns> 由前端自己做缓存失效。
+-->
+<link rel="stylesheet" href="./app.css?v=1.0.0">
+<link rel="stylesheet" href="./knowledge.css?v=1.0.0">
+<style>
+  /* 本应用的品牌色（设计系统用 --app-accent 一个变量区分应用） */
+  :root { --app-accent: #5B67F1; --app-accent-weak: #eef0fe; }
+  @media (prefers-color-scheme: dark) { :root { --app-accent-weak: #1b1d3a; } }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 512 512" width="22" height="22" aria-hidden="true">
+        <rect x="32" y="32" width="448" height="448" rx="104" fill="#5B67F1"/>
+        <text x="256" y="268" fill="#FFFFFF" font-family="Helvetica,Arial,sans-serif"
+              font-size="110" font-weight="700" text-anchor="middle"
+              dominant-baseline="central" letter-spacing="2">KB</text>
+      </svg>
+      <span class="name">知识库阅读器</span>
+    </div>
+    <span class="meta" id="kb-meta"></span>
+    <span class="spacer"></span>
+    <button class="topbar-btn" id="btn-quick" title="快速打开（Ctrl+P）">
+      <span id="btn-quick-icon"></span> 快速打开
+    </button>
+    <span class="meta" id="app-version"></span>
+  </header>
+
+  <!-- 左侧导航 -->
+  <nav class="nav" id="nav"></nav>
+
+  <!-- 核心工作区 -->
+  <main class="main" id="main"></main>
+
+  <!-- 底部任务栏 -->
+  <div class="taskbar" id="taskbar"></div>
+</div>
+
+<div id="toasts" class="toasts"></div>
+
+<script src="./icons.js?v=1.0.0"></script>
+<script src="./app.js?v=1.0.0"></script>
+<script src="./viewer.js?v=1.0.0"></script>
+<script src="./knowledge.js?v=1.0.0"></script>
+</body>
+</html>

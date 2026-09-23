@@ -1,0 +1,9 @@
+Package: shh19-knowledge
+Version: 1.0.0
+Architecture: amd64
+Section: utils
+Priority: optional
+Maintainer: shh <surpasshither@outlook.com>
+Depends: python3 (>= 3.10), systemd
+Description: Knowledge Base
+ Turn any folder on your TNAS into a read-only, searchable, beautifully readable knowledge space.

@@ -1,0 +1,97 @@
+[zh-cn]
+name = "知识库阅读器"
+auth = "shh"
+descript = "把 TNAS 上已有的文件夹注册成只读的知识空间。把目录加入白名单后，应用扫描一次目录树，把文件元数据与文本内容写入本地 SQLite 索引，之后浏览与搜索都不再重复扫盘。内置查看器直接阅读 PDF、图片、Markdown、HTML、纯文本与源码、JSON、XML、YAML、CSV、Word、Excel、PowerPoint 以及音视频；其中 Office 文档与 PDF 的文字层由应用自身解析，不需要任何外部程序，PDF 由随包分发的阅读器渲染，支持页码跳转与文档内搜索。全文检索基于 SQLite FTS5，可按文件类型、路径与时间过滤，按相关度排序，命中处高亮并给出所在页码或工作表。另有收藏、最近阅读、相关文件、快速打开与自定义文件图标；目录树、阅读区与信息栏均可拖动调整，支持浅色、深色与跟随系统。应用对源文件严格只读——不修改、不删除、不移动、不改名任何文件。全部功能离线可用。"
+release_note = "1. 首次发布。"
+important = "严格只读。知识库里的任何文件都不会被修改、删除、移动或重命名。索引与阅读全部在本机完成，应用不发起任何对外网络请求。"
+
+[zh-hk]
+name = "知識庫閱讀器"
+auth = "shh"
+descript = "把 TNAS 上已有的資料夾註冊成唯讀的知識空間。把目錄加入白名單後，應用掃描一次目錄樹，把檔案中繼資料與文字內容寫入本機 SQLite 索引，之後瀏覽與搜尋都不再重複掃碟。內建檢視器直接閱讀 PDF、圖片、Markdown、HTML、純文字與原始碼、JSON、XML、YAML、CSV、Word、Excel、PowerPoint 以及音訊影片；其中 Office 文件與 PDF 的文字層由應用自身解析，不需要任何外部程式，PDF 由隨包分發的閱讀器渲染，支援頁碼跳轉與文件內搜尋。全文檢索基於 SQLite FTS5，可依檔案類型、路徑與時間過濾，依相關度排序，命中處高亮並給出所在頁碼或工作表。另有收藏、最近閱讀、相關檔案、快速開啟與自訂檔案圖示；目錄樹、閱讀區與資訊欄均可拖動調整，支援淺色、深色與跟隨系統。應用對來源檔案嚴格唯讀——不修改、不刪除、不移動、不重新命名任何檔案。全部功能離線可用。"
+release_note = "1. 首次發佈。"
+important = "嚴格唯讀。知識庫裡的任何檔案都不會被修改、刪除、移動或重新命名。索引與閱讀全部在本機完成，應用不發起任何對外網路請求。"
+
+[en-us]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[fr-fr]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[de-de]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[it-it]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[es-es]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[hu-hu]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[ja-jp]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[ko-kr]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[pl-pl]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[ru-ru]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[tr-tr]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."
+
+[pt-pt]
+name = "Knowledge Base"
+auth = "shh"
+descript = "Turns folders on your TNAS into read-only knowledge spaces. A whitelisted folder is indexed once, so browsing and search never re-walk the disk. Viewers cover PDF, images, Markdown, HTML, text, code, CSV, audio and video. Word, Excel, PowerPoint and the PDF text layer are parsed inside the app, with no external program. Full-text search runs on SQLite FTS5 with type, path and time filters and highlighted hits. Also favourites, recently read and quick open. Strictly read-only and fully offline."
+release_note = "1. Initial release."
+important = "Strictly read-only. No file in your knowledge base is ever modified, deleted, moved or renamed. All indexing and reading happens locally; the application makes no outbound network request."

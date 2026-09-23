@@ -1,0 +1,69 @@
+# 署名与来源声明 / Attribution Notice
+
+**Knowledge Base**（应用 ID：`shh19-knowledge`）是面向 TerraMaster TOS 7 的独立应用，
+由 shh 自行开发，**不是任何上游项目的分支**。
+
+| 项 | 内容 |
+|---|---|
+| 本应用代码 | 自有实现，以 MIT 发布 |
+| 第三方组件 | **1 项**：Mozilla PDF.js（Apache-2.0），见下表 |
+| 第三方图标字体 | **无**（图标全部为自绘 SVG） |
+| 打包进包内的模型、数据集或字体 | **无** |
+| 打包进包内的可执行二进制 | **无**（含 `.wasm` / `.so` / ELF 在内，一个都没有） |
+| 许可证全文 | [`LICENSE`](./LICENSE)（本应用）、[`webui/pdfjs/LICENSE.txt`](./webui/pdfjs/LICENSE.txt)（PDF.js） |
+
+## 一、随包分发的第三方组件
+
+| 组件 | 版本 | 上游 | 许可证 | 分发形式 |
+|---|---|---|---|---|
+| Mozilla PDF.js | 6.3.289 | <https://github.com/mozilla/pdf.js> | Apache-2.0 | 仅 `webui/pdfjs/pdf.min.mjs` 与 `pdf.worker.min.mjs` 两个 **JavaScript 文本文件** |
+
+**PDF.js 的用途与范围**：在浏览器内渲染 PDF 页面（翻页、缩放、旋转、文档内查找）。
+它**完全在浏览器本地运行**，不联网、不上传任何内容、不与任何服务器通信。
+
+> **关于 PDF.js 中我们刻意排除的部分**（重要，涉及合规）：
+> PDF.js 官方发行包还包含 `.wasm` 模块（`openjpeg.wasm` 处理 JPEG2000 图像、
+> `qcms_bg.wasm` 处理 ICC 色彩管理）以及 `cmaps/`（168 个 `.bcmap` 数据文件）、
+> `standard_fonts/`（字体文件）。**这些我们一个都没有放进包里**：
+>
+> * `.wasm` 是**可执行的 WebAssembly 字节码**，会直接撞上审核标准 §16.4 的
+>   一票否决项（包内不得含二进制可执行文件）；
+> * `cmaps/` 与 `standard_fonts/` 是约 1.5 MB 的二进制数据文件，
+>   放进一个以「包内无二进制」为合规基础的包里不值得。
+>
+> 代价：使用**未嵌入 CID 字体**的 PDF 可能出现字形缺失。这一限制已写入
+> `README.md` 的「不承诺的功能」。**PDF 的全文检索不受影响** —— 文本层由应用自己解析。
+
+## 二、随包分发的自有组件
+
+| 组件 | 许可证 | 说明 |
+|---|---|---|
+| `tnasapp` 应用框架 | MIT | 本项目自有代码 |
+| `webui/app.css` / `app.js` / `icons.js` | MIT | 本项目自有代码 |
+| 应用图标 SVG | MIT | 本项目自有手绘 |
+
+## 三、运行时不打包、不再分发的依赖
+
+| 依赖 | 来源 | 说明 |
+|---|---|---|
+| Python 3 标准库 | TOS 7 系统预装 | 只声明 `Depends: python3 (>= 3.10)`，由系统包管理器提供，本应用不打包、不再分发 |
+
+本应用**不调用任何外部程序**（无 ffmpeg / tesseract / LibreOffice 等），
+因此不存在「运行时依赖第三方可执行程序」的情形。
+
+## 四、商标说明
+
+本应用名称与代码中**不包含** TerraMaster、TOS、Mozilla、Firefox 或任何第三方的商标、
+Logo 或产品名，不暗示与上述主体存在任何隶属或背书关系。
+「PDF.js」仅用于指明实际使用的开源组件来源，属合理指明性使用。
+
+## 五、许可证义务的履行
+
+1. **Apache-2.0 的要求**：保留版权与许可声明（已在本文件与
+   `webui/pdfjs/LICENSE.txt` 中给出许可证全文）、标明修改（**我们未修改 PDF.js 源码**，
+   仅原样复制两个构建产物）、不暗示背书（见第四节）。
+2. **MIT（本应用自身）**：见 `LICENSE`。
+3. **PSF License（Python）**：本应用不打包 Python 本身，无分发义务。
+
+本文档与 `LICENSE`、`PRIVACY.md`、`THIRD_PARTY_NOTICES.md` 一并通过 deb 包分发
+（安装在 `/usr/local/shh19-knowledge/`）。

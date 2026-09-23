@@ -1,0 +1,76 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "shh19-knowledge-1.0.0",
+  "documentNamespace": "https://github.com/RyanYang163/shh19-knowledge/sbom/1.0.0",
+  "creationInfo": {
+    "created": "2026-09-23T00:00:00Z",
+    "creators": [
+      "Tool: gen.py (nas-apps/_generator)",
+      "Person: shh"
+    ],
+    "licenseListVersion": "3.22"
+  },
+  "packages": [
+    {
+      "name": "shh19-knowledge",
+      "SPDXID": "SPDXRef-Package-shh19-knowledge",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "https://github.com/RyanYang163/shh19-knowledge",
+      "filesAnalyzed": true,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "Copyright (c) 2026 shh",
+      "supplier": "Person: shh",
+      "primaryPackagePurpose": "APPLICATION",
+      "description": "只读私有知识库阅读器：把 TNAS 上的文件夹注册为可搜索、可阅读的知识空间。",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/RyanYang163/shh19-knowledge@1.0.0"
+        }
+      ]
+    },
+    {
+      "name": "pdfjs-dist",
+      "SPDXID": "SPDXRef-Package-pdfjs-dist",
+      "versionInfo": "6.3.289",
+      "downloadLocation": "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-6.3.289.tgz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "Copyright 2012 Mozilla Foundation",
+      "supplier": "Organization: Mozilla Foundation",
+      "homepage": "https://github.com/mozilla/pdf.js",
+      "primaryPackagePurpose": "LIBRARY",
+      "description": "浏览器内 PDF 渲染库。包内仅含 webui/pdfjs/pdf.min.mjs 与 pdf.worker.min.mjs 两个 JavaScript 文本文件；上游的 .wasm、cmaps、standard_fonts 均未分发（详见 THIRD_PARTY_NOTICES.md）。",
+      "comment": "无网络行为；纯本地执行。未修改上游源码。",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:npm/pdfjs-dist@6.3.289"
+        },
+        {
+          "referenceCategory": "OTHER",
+          "referenceType": "license-file",
+          "referenceLocator": "webui/pdfjs/LICENSE.txt"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relatedSpdxElement": "SPDXRef-Package-shh19-knowledge",
+      "relationshipType": "DESCRIBES"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-shh19-knowledge",
+      "relatedSpdxElement": "SPDXRef-Package-pdfjs-dist",
+      "relationshipType": "CONTAINS"
+    }
+  ]
+}
