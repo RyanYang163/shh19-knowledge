@@ -1,13 +1,13 @@
 # Knowledge Base（知识库阅读器）
 
-> TOS 7 Deb 单包应用 · WebUI 内嵌（iframe）· 版本 **1.0.1**
+> TOS 7 Deb 单包应用 · WebUI 内嵌（iframe）· 版本 **1.0.2**
 
 | 项 | 值 |
 |---|---|
 | 应用 ID | `shh19-knowledge` |
 | 包类型 | Deb 单包（`application_type: "deb"`） |
 | 打开方式 | WebUI 内嵌（`type: "iframe"`，`path: "/shh19-knowledge/"`） |
-| 版本 | 1.0.1 |
+| 版本 | 1.0.2 |
 | 分类 | `Utilities`, `Web_Services` |
 | 发布者 | shh |
 | 开发者仓库 | <https://github.com/RyanYang163/shh19-knowledge> |
