@@ -6,7 +6,7 @@
 
 **公网地址 / Public URL**：<https://github.com/RyanYang163/shh19-knowledge/blob/main/PRIVACY.md>
 **生效日期 / Effective date**：2026-09-23
-**适用版本 / Applies to**：1.0.2
+**适用版本 / Applies to**：1.0.025
 **开发者 / Publisher**：shh
 **包名 / Package**：`shh19-knowledge`
 **软件类型 / Type**：TerraMaster TOS 7 Deb 应用（WebUI 内嵌 / iframe）

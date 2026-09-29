@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>知识库阅读器</title>
+<title data-i18n>知识库阅读器</title>
 <!--
   全部资源用**相对路径**引用，并带 ?v= 版本参数：
     · 相对路径 —— 应用会被平台挂在 /<appid>/ 或 /v2/proxy/<appid>/ 下，
@@ -12,8 +12,8 @@
   另外：框架的响应固定带 Cache-Control: no-store，HTTP 缓存指望不上，
   所以内容 URL 上都带 ?v=<mtime_ns> 由前端自己做缓存失效。
 -->
-<link rel="stylesheet" href="./app.css?v=1.0.2">
-<link rel="stylesheet" href="./knowledge.css?v=1.0.2">
+<link rel="stylesheet" href="./app.css?v=1.0.025">
+<link rel="stylesheet" href="./knowledge.css?v=1.0.025">
 <style>
   /* 本应用的品牌色（设计系统用 --app-accent 一个变量区分应用） */
   :root { --app-accent: #5B67F1; --app-accent-weak: #eef0fe; }
@@ -32,7 +32,7 @@
               font-size="110" font-weight="700" text-anchor="middle"
               dominant-baseline="central" letter-spacing="2">KB</text>
       </svg>
-      <span class="name">知识库阅读器</span>
+      <span class="name" data-i18n>知识库阅读器</span>
     </div>
     <span class="meta" id="kb-meta"></span>
     <span class="spacer"></span>
@@ -54,9 +54,13 @@
 
 <div id="toasts" class="toasts"></div>
 
-<script src="./icons.js?v=1.0.2"></script>
-<script src="./app.js?v=1.0.2"></script>
-<script src="./viewer.js?v=1.0.2"></script>
-<script src="./knowledge.js?v=1.0.2"></script>
+<script src="./icons.js?v=1.0.025"></script>
+<!-- 多语言：i18n.js 必须在 app.js 之前 —— app.js 里到处调 T()，
+     而它的兜底守卫在加载时就判定一次，后到就退化成纯中文了 -->
+<script src="./i18n.js?v=1.0.025"></script>
+<script src="./knowledge.i18n.js?v=1.0.025"></script>
+<script src="./app.js?v=1.0.025"></script>
+<script src="./viewer.js?v=1.0.025"></script>
+<script src="./knowledge.js?v=1.0.025"></script>
 </body>
 </html>

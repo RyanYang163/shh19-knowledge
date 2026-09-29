@@ -61,14 +61,14 @@ function iconHtml(meta, size) {
 /* ---------------------------------------------------------------- 首页 */
 
 async function renderHome(main) {
-  main.appendChild(UI.empty('refresh', '正在读取知识库…', ''));
+  main.appendChild(UI.empty('refresh', T('正在读取知识库…'), ''));
 
   let data;
   try {
     data = await API.get('api/home');
   } catch (error) {
     main.innerHTML = '';
-    main.appendChild(UI.empty('alert', '无法读取知识库', U.esc(error.message || String(error))));
+    main.appendChild(UI.empty('alert', T('无法读取知识库'), U.esc(error.message || String(error))));
     return;
   }
   State.kbs = data.knowledge_bases || [];
@@ -80,24 +80,24 @@ async function renderHome(main) {
   const greeting = U.el('div', { style: 'margin-bottom:18px' }, [
     U.el('h1', { style: 'margin:0 0 4px;font-size:22px', text: greetingText() }),
     U.el('div', { style: 'color:var(--text-soft);font-size:13.5px',
-                  text: '继续探索你的知识' }),
+                  text: T('继续探索你的知识') }),
   ]);
   main.appendChild(greeting);
 
   // --- 我的知识库 ---
   const head = U.el('div', { style: 'display:flex;align-items:center;gap:10px;margin:0 0 10px' }, [
-    U.el('h2', { style: 'margin:0;font-size:15px', text: '我的知识库' }),
+    U.el('h2', { style: 'margin:0;font-size:15px', text: T('我的知识库') }),
     U.el('span', { class: 'spacer', style: 'flex:1' }),
   ]);
-  const addBtn = U.el('button', { class: 'btn', text: '＋ 新建知识库' });
+  const addBtn = U.el('button', { class: 'btn', text: T('＋ 新建知识库') });
   addBtn.addEventListener('click', newKnowledgeBase);
   head.appendChild(addBtn);
   main.appendChild(head);
 
   if (!State.kbs.length) {
-    const empty = UI.empty('book', '还没有知识库',
-      '知识库把一个已有的文件夹变成只读、可搜索的阅读空间。'
-      + '<br>原文件不会被修改、移动或删除。',
+    const empty = UI.empty('book', T('还没有知识库'),
+      T('知识库把一个已有的文件夹变成只读、可搜索的阅读空间。')
+      + T('<br>原文件不会被修改、移动或删除。'),
       addBtn.cloneNode(true));
     empty.querySelector('button').addEventListener('click', newKnowledgeBase);
     main.appendChild(empty);
@@ -117,14 +117,14 @@ async function renderHome(main) {
       card.querySelector('.kb-path').textContent = kb.root_path;
       card.querySelector('.kb-path').title = kb.root_path;
       card.querySelector('.kb-stats').appendChild(
-        U.el('span', { text: U.num(kb.live_file_count || 0) + ' 个文件' }));
+        U.el('span', { text: U.num(kb.live_file_count || 0) + T(' 个文件') }));
       card.querySelector('.kb-stats').appendChild(
         U.el('span', { text: U.size(kb.total_bytes || 0) }));
       if (!kb.root_exists) {
-        card.appendChild(U.el('span', { class: 'kb-flag', text: '目录不可访问' }));
+        card.appendChild(U.el('span', { class: 'kb-flag', text: T('目录不可访问') }));
       }
       if (kb.scan_state === 'scanning') {
-        card.appendChild(U.el('span', { class: 'kb-flag', text: '正在扫描' }));
+        card.appendChild(U.el('span', { class: 'kb-flag', text: T('正在扫描') }));
       }
       card.addEventListener('click', () => {
         State.currentKb = kb;
@@ -137,10 +137,10 @@ async function renderHome(main) {
 
   // --- 最近阅读 ---
   const recents = U.el('div', { class: 'card', style: 'margin-top:20px' }, [
-    U.el('h2', { html: Icons.svg('clock') + ' 最近阅读' }),
+    U.el('h2', { html: Icons.svg('clock') + T(' 最近阅读') }),
   ]);
   if (!data.recents.length) {
-    recents.appendChild(U.el('div', { class: 'card-hint', text: '还没有打开过任何文件。' }));
+    recents.appendChild(U.el('div', { class: 'card-hint', text: T('还没有打开过任何文件。') }));
   } else {
     recents.appendChild(buildFileList(data.recents, (item) => openInBrowser(item.path)));
   }
@@ -149,7 +149,7 @@ async function renderHome(main) {
   // --- 收藏 ---
   if (data.favorites.length) {
     const favs = U.el('div', { class: 'card', style: 'margin-top:14px' }, [
-      U.el('h2', { html: Icons.svg('tag') + ' 收藏' }),
+      U.el('h2', { html: Icons.svg('tag') + T(' 收藏') }),
     ]);
     favs.appendChild(buildFileList(data.favorites, (item) => openInBrowser(item.path)));
     main.appendChild(favs);
@@ -158,7 +158,7 @@ async function renderHome(main) {
   // --- 最近更新 ---
   if (data.recently_updated.length) {
     const newer = U.el('div', { class: 'card', style: 'margin-top:14px' }, [
-      U.el('h2', { html: Icons.svg('refresh') + ' 最近更新' }),
+      U.el('h2', { html: Icons.svg('refresh') + T(' 最近更新') }),
     ]);
     newer.appendChild(buildFileList(data.recently_updated, (item) => openInBrowser(item.path), true));
     main.appendChild(newer);
@@ -166,22 +166,22 @@ async function renderHome(main) {
 
   if (data.counts && data.counts.pending) {
     main.appendChild(U.el('div', { class: 'info-note', style: 'margin-top:16px',
-      text: '还有 ' + U.num(data.counts.pending) + ' 个文件等待建立索引。'
-        + '索引完成后它们才能被全文检索命中。' }));
+      text: T('还有 ') + U.num(data.counts.pending) + T(' 个文件等待建立索引。')
+        + T('索引完成后它们才能被全文检索命中。') }));
   }
   if (!State.allowedRoots.length) {
     main.appendChild(U.el('div', { class: 'info-note warn', style: 'margin-top:16px',
-      text: '还没有配置可访问目录。新建知识库时会自动把所选目录加入白名单；'
-        + '也可以到「设置」里手动管理。' }));
+      text: T('还没有配置可访问目录。新建知识库时会自动把所选目录加入白名单；')
+        + T('也可以到「设置」里手动管理。') }));
   }
 }
 
 function greetingText() {
   const hour = new Date().getHours();
-  if (hour < 6) return '夜深了';
-  if (hour < 12) return '早上好';
-  if (hour < 18) return '下午好';
-  return '晚上好';
+  if (hour < 6) return T('夜深了');
+  if (hour < 12) return T('早上好');
+  if (hour < 18) return T('下午好');
+  return T('晚上好');
 }
 
 function buildFileList(items, onPick, showKind) {
@@ -192,7 +192,7 @@ function buildFileList(items, onPick, showKind) {
     li.appendChild(U.el('span', { class: 'n', text: item.name }));
     li.appendChild(U.el('span', {
       class: 'r',
-      text: (item.missing ? '已不在索引中 · ' : '')
+      text: (item.missing ? T('已不在索引中 · ') : '')
         + (showKind ? (item.rel_path || '') : U.time(item.mtime_ns / 1e9)),
     }));
     if (item.missing) li.classList.add('missing');
@@ -217,7 +217,7 @@ async function renderBrowse(main) {
   if (!State.currentKb && State.kbs.length) State.currentKb = State.kbs[0];
   if (!State.currentKb) {
     document.body.classList.remove('kb-fullbleed');
-    main.appendChild(UI.empty('book', '还没有知识库', '先到首页新建一个知识库。'));
+    main.appendChild(UI.empty('book', T('还没有知识库'), T('先到首页新建一个知识库。')));
     return;
   }
 
@@ -261,7 +261,7 @@ async function renderBrowse(main) {
   viewer.appendChild(vhead);
   viewer.appendChild(vbody);
 
-  const vname = U.el('span', { class: 'name', text: '未选择文件' });
+  const vname = U.el('span', { class: 'name', text: T('未选择文件') });
   const vbadge = U.el('span', { class: 'badge', text: '' });
   const vspacer = U.el('span', { class: 'spacer' });
   const vactions = U.el('span', { style: 'display:flex;gap:2px;align-items:center' });
@@ -278,24 +278,24 @@ async function renderBrowse(main) {
     infoBody.innerHTML = '';
     if (!meta) {
       infoBody.appendChild(U.el('div', { class: 'info-block' }, [
-        U.el('div', { class: 'info-note', text: '选中文件后这里会显示它的信息、'
-          + '相关文件与可定位的大纲。' }),
+        U.el('div', { class: 'info-note', text: T('选中文件后这里会显示它的信息、')
+          + T('相关文件与可定位的大纲。') }),
       ]));
       return;
     }
-    const block = U.el('div', { class: 'info-block' }, [U.el('h3', { text: '文件信息' })]);
+    const block = U.el('div', { class: 'info-block' }, [U.el('h3', { text: T('文件信息') })]);
     const dl = U.el('dl', { class: 'info-kv' });
     const rows = [
-      ['名称', meta.name],
-      ['类型', kindLabel(meta.kind) + (meta.ext ? '（' + meta.ext + '）' : '')],
-      ['大小', meta.is_dir ? '目录' : U.size(meta.size)],
-      ['修改时间', U.time(meta.mtime_ns / 1e9)],
-      ['知识库', meta.kb_name],
-      ['相对路径', meta.rel_path || '/'],
+      [T('名称'), meta.name],
+      [T('类型'), kindLabel(meta.kind) + (meta.ext ? '（' + meta.ext + '）' : '')],
+      [T('大小'), meta.is_dir ? T('目录') : U.size(meta.size)],
+      [T('修改时间'), U.time(meta.mtime_ns / 1e9)],
+      [T('知识库'), meta.kb_name],
+      [T('相对路径'), meta.rel_path || '/'],
     ];
-    if (meta.image_w && meta.image_h) rows.push(['尺寸', meta.image_w + ' × ' + meta.image_h]);
-    if (meta.encoding) rows.push(['文本编码', meta.encoding]);
-    if (meta.text_chars) rows.push(['已索引字符', U.num(meta.text_chars)]);
+    if (meta.image_w && meta.image_h) rows.push([T('尺寸'), meta.image_w + ' × ' + meta.image_h]);
+    if (meta.encoding) rows.push([T('文本编码'), meta.encoding]);
+    if (meta.text_chars) rows.push([T('已索引字符'), U.num(meta.text_chars)]);
     rows.forEach((pair) => {
       dl.appendChild(U.el('dt', { text: pair[0] }));
       dl.appendChild(U.el('dd', { text: String(pair[1] == null ? '—' : pair[1]) }));
@@ -305,46 +305,46 @@ async function renderBrowse(main) {
 
     if (meta.note) {
       infoBody.appendChild(U.el('div', { class: 'info-block' }, [
-        U.el('h3', { text: '索引状态' }),
+        U.el('h3', { text: T('索引状态') }),
         U.el('div', { class: 'info-note' + (meta.text_state === 'failed' ? ' warn' : ''),
                       text: meta.note }),
       ]));
     }
 
     const outlineBlock = U.el('div', { class: 'info-block', style: 'display:none' }, [
-      U.el('h3', { text: '大纲' }),
+      U.el('h3', { text: T('大纲') }),
     ]);
     const outlineList = U.el('ul', { class: 'info-list' });
     outlineBlock.appendChild(outlineList);
     infoBody.appendChild(outlineBlock);
 
     const relatedBlock = U.el('div', { class: 'info-block' }, [
-      U.el('h3', { text: '相关文件' }),
-      U.el('div', { class: 'info-note', text: '正在查找…' }),
+      U.el('h3', { text: T('相关文件') }),
+      U.el('div', { class: 'info-note', text: T('正在查找…') }),
     ]);
     infoBody.appendChild(relatedBlock);
 
-    const actions = U.el('div', { class: 'info-block' }, [U.el('h3', { text: '操作' })]);
+    const actions = U.el('div', { class: 'info-block' }, [U.el('h3', { text: T('操作') })]);
     const row = U.el('div', { style: 'display:flex;flex-wrap:wrap;gap:6px' });
     const favBtn = U.el('button', { class: 'icon-btn',
-      html: Icons.svg('tag') + ' ' + (meta.favorited ? '取消收藏' : '收藏') });
+      html: Icons.svg('tag') + ' ' + (meta.favorited ? T('取消收藏') : T('收藏')) });
     favBtn.addEventListener('click', async () => {
       const result = await API.post('api/fav/toggle', { path: meta.path });
       if (result.favorited) State.favorites.add(meta.path);
       else State.favorites.delete(meta.path);
-      favBtn.innerHTML = Icons.svg('tag') + ' ' + (result.favorited ? '取消收藏' : '收藏');
-      UI.ok(result.favorited ? '已加入收藏' : '已取消收藏');
+      favBtn.innerHTML = Icons.svg('tag') + ' ' + (result.favorited ? T('取消收藏') : T('收藏'));
+      UI.ok(result.favorited ? T('已加入收藏') : T('已取消收藏'));
     });
     row.appendChild(favBtn);
     row.appendChild(U.el('a', { class: 'icon-btn', href: contentUrl(meta, 'download=1'),
-      style: 'text-decoration:none', html: Icons.svg('download') + ' 下载' }));
-    const iconBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('image') + ' 更改图标' });
+      style: 'text-decoration:none', html: Icons.svg('download') + T(' 下载') }));
+    const iconBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('image') + T(' 更改图标') });
     iconBtn.addEventListener('click', () => chooseIcon(meta, () => reloadTree()));
     row.appendChild(iconBtn);
 
     // 图标上传（只接受 SVG/图片，服务端按内容嗅探并清洗）
     const uploadLabel = U.el('label', { class: 'icon-btn', style: 'cursor:pointer',
-      html: Icons.svg('upload') + ' 上传图标' });
+      html: Icons.svg('upload') + T(' 上传图标') });
     const fileInput = U.el('input', { type: 'file', accept: 'image/*,.svg', style: 'display:none' });
     fileInput.addEventListener('change', async () => {
       const file = fileInput.files && fileInput.files[0];
@@ -357,8 +357,8 @@ async function renderBrowse(main) {
         const result = await API.post('api/icon/upload', {
           target_path: meta.path, data_base64: btoa(binary),
         });
-        if (result.ok) { UI.ok('图标已更新'); reloadTree(); setInfo(meta); }
-        else UI.err(result.error || '图标无法保存');
+        if (result.ok) { UI.ok(T('图标已更新')); reloadTree(); setInfo(meta); }
+        else UI.err(result.error || T('图标无法保存'));
       } catch (error) {
         UI.err(error.message || String(error));
       }
@@ -407,7 +407,7 @@ async function renderBrowse(main) {
         host.remove();
         if (!data.related || !data.related.length) {
           relatedBlock.appendChild(U.el('div', { class: 'info-note',
-            text: '没有找到明显相关的文件。' }));
+            text: T('没有找到明显相关的文件。') }));
           return;
         }
         const ul = U.el('ul', { class: 'info-list' });
@@ -422,7 +422,7 @@ async function renderBrowse(main) {
         relatedBlock.appendChild(ul);
         relatedBlock.appendChild(U.el('div', {
           class: 'info-note', style: 'margin-top:8px',
-          text: '相关文件基于所在目录与文件名计算，不是 AI 推荐。',
+          text: T('相关文件基于所在目录与文件名计算，不是 AI 推荐。'),
         }));
       })
       .catch(() => { /* 相关文件失败不影响主流程 */ });
@@ -476,7 +476,7 @@ async function renderBrowse(main) {
         vbody.insertBefore(node, vbody.firstChild);
         if (meta.text_state === 'unsupported') {
           vbadge.className = 'badge warn';
-          vbadge.textContent = '无文本层';
+          vbadge.textContent = T('无文本层');
         }
       },
       outline: (items) => infoApi.outline(items),
@@ -514,26 +514,26 @@ async function renderBrowse(main) {
   treeHead.appendChild(kbSelect);
   treeHead.appendChild(U.el('span', { class: 'spacer' }));
 
-  const scanBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('scan'), title: '重新扫描' });
+  const scanBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('scan'), title: T('重新扫描') });
   scanBtn.addEventListener('click', async () => {
     try {
       await Jobs.submit('scan', { kb: State.currentKb.id },
-                        '扫描「' + State.currentKb.name + '」');
-      UI.ok('已开始扫描，可在「任务」里查看进度');
+                        T('扫描「') + State.currentKb.name + '」');
+      UI.ok(T('已开始扫描，可在「任务」里查看进度'));
       Shell.show('jobs');
     } catch (error) {
       UI.err(error.message || String(error));
     }
   });
   const filterBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('panel'),
-                                     title: '隐藏 / 显示信息栏' });
+                                     title: T('隐藏 / 显示信息栏') });
   filterBtn.addEventListener('click', () => {
     shell.classList.toggle('no-info');
     splitter2.style.display = shell.classList.contains('no-info') ? 'none' : '';
     savePanes();
   });
   const focusBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('eye'),
-                                    title: '专注阅读（隐藏两侧）' });
+                                    title: T('专注阅读（隐藏两侧）') });
   focusBtn.addEventListener('click', () => {
     shell.classList.toggle('focus');
     focusBtn.classList.toggle('on', shell.classList.contains('focus'));
@@ -550,25 +550,25 @@ async function renderBrowse(main) {
 
   async function loadLevel(parentRel, container, depth) {
     container.innerHTML = '';
-    container.appendChild(U.el('div', { class: 'tree-empty', text: '正在读取…' }));
+    container.appendChild(U.el('div', { class: 'tree-empty', text: T('正在读取…') }));
     let data;
     try {
       data = await API.get('api/kb/' + kb.id + '/tree?parent=' + encodeURIComponent(parentRel));
     } catch (error) {
       container.innerHTML = '';
       container.appendChild(U.el('div', { class: 'tree-empty',
-        text: '无法读取：' + (error.message || error) }));
+        text: T('无法读取：') + (error.message || error) }));
       return;
     }
     container.innerHTML = '';
     if (!data.entries.length) {
-      container.appendChild(U.el('div', { class: 'tree-empty', text: '（空）' }));
+      container.appendChild(U.el('div', { class: 'tree-empty', text: T('（空）') }));
       return;
     }
     if (data.total > data.entries.length) {
       container.appendChild(U.el('div', { class: 'tree-empty',
-        text: '只显示前 ' + data.entries.length + ' 项（共 ' + U.num(data.total) + ' 项）。'
-          + '可用搜索定位其余文件。' }));
+        text: T('只显示前 ') + data.entries.length + T(' 项（共 ') + U.num(data.total) + T(' 项）。')
+          + T('可用搜索定位其余文件。') }));
     }
     data.entries.forEach((entry) => {
       const row = U.el('div', { class: 'tree-row', dataset: { path: entry.path } });
@@ -585,8 +585,8 @@ async function renderBrowse(main) {
       if (!entry.is_dir) {
         row.appendChild(U.el('span', { class: 'size', text: U.size(entry.size) }));
       }
-      if (entry.is_symlink) row.title = '这是一个符号链接';
-      if (entry.text_state === 'unsupported') row.title = '该文件没有可提取的文本层';
+      if (entry.is_symlink) row.title = T('这是一个符号链接');
+      if (entry.text_state === 'unsupported') row.title = T('该文件没有可提取的文本层');
 
       const children = U.el('div', { class: 'tree-children' });
       let loaded = false;
@@ -634,22 +634,22 @@ async function renderBrowse(main) {
 
   function entryMenu(entry) {
     const buttons = [
-      { text: '设为收藏 / 取消收藏', kind: '', onclick: async (close) => {
+      { text: T('设为收藏 / 取消收藏'), kind: '', onclick: async (close) => {
         await API.post('api/fav/toggle', { path: entry.path });
-        UI.ok('已更新收藏');
+        UI.ok(T('已更新收藏'));
         close();
       } },
-      { text: '更改图标', kind: '', onclick: (close) => { close(); chooseIcon(entry, reloadTree); } },
-      { text: '复制路径', kind: '', onclick: async (close) => {
-        try { await navigator.clipboard.writeText(entry.path); UI.ok('路径已复制'); }
-        catch (error) { UI.warn('浏览器未允许写入剪贴板'); }
+      { text: T('更改图标'), kind: '', onclick: (close) => { close(); chooseIcon(entry, reloadTree); } },
+      { text: T('复制路径'), kind: '', onclick: async (close) => {
+        try { await navigator.clipboard.writeText(entry.path); UI.ok(T('路径已复制')); }
+        catch (error) { UI.warn(T('浏览器未允许写入剪贴板')); }
         close();
       } },
-      { text: '下载', kind: '', onclick: (close) => {
+      { text: T('下载'), kind: '', onclick: (close) => {
         window.open(contentUrl(entry, 'download=1'), '_blank', 'noopener');
         close();
       } },
-      { text: '取消', kind: '', onclick: (close) => close() },
+      { text: T('取消'), kind: '', onclick: (close) => close() },
     ];
     UI.modal({
       title: entry.name,
@@ -695,11 +695,11 @@ function makeSplitter(node, shell, variable, min, max, onDone) {
 
 function kindLabel(kind) {
   return {
-    pdf: 'PDF', markdown: 'Markdown', html: '网页', text: '文本', code: '代码',
-    json: 'JSON', xml: 'XML', yaml: 'YAML', csv: '表格', xlsx: 'Excel',
-    docx: 'Word', pptx: '演示文稿', image: '图片', audio: '音频', video: '视频',
-    dir: '目录', other: '其它',
-  }[kind] || '文件';
+    pdf: 'PDF', markdown: 'Markdown', html: T('网页'), text: T('文本'), code: T('代码'),
+    json: 'JSON', xml: 'XML', yaml: 'YAML', csv: T('表格'), xlsx: 'Excel',
+    docx: 'Word', pptx: T('演示文稿'), image: T('图片'), audio: T('音频'), video: T('视频'),
+    dir: T('目录'), other: T('其它'),
+  }[kind] || T('文件');
 }
 
 function chooseIcon(entry, done) {
@@ -718,24 +718,24 @@ function chooseIcon(entry, done) {
           target_type: entry.is_dir ? 'dir' : 'file',
           icon_type: 'builtin', icon_value: icon.value,
         });
-        UI.ok('图标已更新');
+        UI.ok(T('图标已更新'));
         close();
         if (done) done();
       });
       grid.appendChild(button);
     });
-    const clearBtn = U.el('button', { class: 'btn', text: '恢复默认图标' });
+    const clearBtn = U.el('button', { class: 'btn', text: T('恢复默认图标') });
     clearBtn.addEventListener('click', async () => {
       await API.post('api/icon/clear', { target_path: entry.path });
-      UI.ok('已恢复默认');
+      UI.ok(T('已恢复默认'));
       close();
       if (done) done();
     });
     const dialog = UI.modal({
-      title: '为「' + entry.name + '」选择图标',
+      title: T('为「') + entry.name + T('」选择图标'),
       bodyHtml: '',
       wide: true,
-      buttons: [{ text: '关闭', kind: '', onclick: (close) => close() }],
+      buttons: [{ text: T('关闭'), kind: '', onclick: (close) => close() }],
     });
     dialog.body.appendChild(grid);
     dialog.body.appendChild(U.el('div', { style: 'margin-top:12px' }, [clearBtn]));
@@ -762,32 +762,32 @@ function renderSearch(main) {
   document.body.classList.remove('kb-fullbleed');
   main.innerHTML = '';
   const box = U.el('div', { class: 'search-box' });
-  const input = U.el('input', { type: 'search', placeholder: '搜索知识库（文件名与全文内容）…' });
-  const button = U.el('button', { class: 'btn', text: '搜索' });
+  const input = U.el('input', { type: 'search', placeholder: T('搜索知识库（文件名与全文内容）…') });
+  const button = U.el('button', { class: 'btn', text: T('搜索') });
   box.appendChild(input);
   box.appendChild(button);
   main.appendChild(box);
 
   const filters = U.el('div', { class: 'filters' });
   const kbSelect = U.el('select');
-  kbSelect.appendChild(U.el('option', { value: '', text: '全部知识库' }));
+  kbSelect.appendChild(U.el('option', { value: '', text: T('全部知识库') }));
   State.kbs.forEach((kb) => {
     kbSelect.appendChild(U.el('option', { value: String(kb.id), text: kb.name }));
   });
   const kindSelect = U.el('select');
-  [['', '全部类型'], ['pdf', 'PDF'], ['docx', 'Word'], ['xlsx', 'Excel'],
-   ['pptx', '演示文稿'], ['markdown', 'Markdown'], ['text', '文本'],
-   ['code', '代码'], ['csv', '表格'], ['image', '图片'],
-   ['audio', '音频'], ['video', '视频']].forEach((pair) => {
+  [['', T('全部类型')], ['pdf', 'PDF'], ['docx', 'Word'], ['xlsx', 'Excel'],
+   ['pptx', T('演示文稿')], ['markdown', 'Markdown'], ['text', T('文本')],
+   ['code', T('代码')], ['csv', T('表格')], ['image', T('图片')],
+   ['audio', T('音频')], ['video', T('视频')]].forEach((pair) => {
     kindSelect.appendChild(U.el('option', { value: pair[0], text: pair[1] }));
   });
   const sortSelect = U.el('select');
-  [['relevance', '相关度'], ['time', '时间'], ['name', '名称']].forEach((pair) => {
+  [['relevance', T('相关度')], ['time', T('时间')], ['name', T('名称')]].forEach((pair) => {
     sortSelect.appendChild(U.el('option', { value: pair[0], text: pair[1] }));
   });
   filters.appendChild(kbSelect);
   filters.appendChild(kindSelect);
-  filters.appendChild(U.el('span', { class: 'meta', text: '排序' }));
+  filters.appendChild(U.el('span', { class: 'meta', text: T('排序') }));
   filters.appendChild(sortSelect);
   if (State.currentKb) kbSelect.value = String(State.currentKb.id);
   main.appendChild(filters);
@@ -802,7 +802,7 @@ function renderSearch(main) {
     results.innerHTML = '';
     summary.textContent = '';
     if (!query) return;
-    summary.textContent = '搜索中…';
+    summary.textContent = T('搜索中…');
     const params = ['q=' + encodeURIComponent(query), 'limit=60'];
     if (kbSelect.value) params.push('kb=' + kbSelect.value);
     if (kindSelect.value) params.push('kind=' + kindSelect.value);
@@ -811,22 +811,22 @@ function renderSearch(main) {
     try {
       data = await API.get('api/search?' + params.join('&'));
     } catch (error) {
-      summary.textContent = '搜索失败：' + (error.message || error);
+      summary.textContent = T('搜索失败：') + (error.message || error);
       return;
     }
     summary.innerHTML = '';
     summary.appendChild(U.el('span', {
-      text: '找到 ' + U.num(data.total) + ' 个结果（用时取决于索引规模）' }));
+      text: T('找到 ') + U.num(data.total) + T(' 个结果（用时取决于索引规模）') }));
     if (data.degraded && data.hint) {
       // 降级必须让用户看见，绝不假装全文检索成功了
       summary.appendChild(U.el('span', {
-        class: 'badge degraded', style: 'margin-left:8px', text: '模糊匹配' }));
+        class: 'badge degraded', style: 'margin-left:8px', text: T('模糊匹配') }));
       summary.appendChild(U.el('div', { class: 'info-note warn',
         style: 'margin-top:8px', text: data.hint }));
     }
     if (!data.results.length) {
-      results.appendChild(UI.empty('search', '没有找到匹配的文件',
-        '可以换一个关键词，或先把知识库扫描完整。'));
+      results.appendChild(UI.empty('search', T('没有找到匹配的文件'),
+        T('可以换一个关键词，或先把知识库扫描完整。')));
       return;
     }
     data.results.forEach((item) => {
@@ -870,17 +870,17 @@ function renderSearch(main) {
 async function renderFavorites(main) {
   document.body.classList.remove('kb-fullbleed');
   main.innerHTML = '';
-  main.appendChild(U.el('h2', { style: 'margin-top:0', text: '收藏' }));
+  main.appendChild(U.el('h2', { style: 'margin-top:0', text: T('收藏') }));
   let data;
   try {
     data = await API.get('api/fav/list?limit=500');
   } catch (error) {
-    main.appendChild(UI.empty('alert', '无法读取收藏', U.esc(error.message || String(error))));
+    main.appendChild(UI.empty('alert', T('无法读取收藏'), U.esc(error.message || String(error))));
     return;
   }
   if (!data.favorites.length) {
-    main.appendChild(UI.empty('tag', '还没有收藏',
-      '在文件树或信息栏点「收藏」，常用的文件会集中到这里。'));
+    main.appendChild(UI.empty('tag', T('还没有收藏'),
+      T('在文件树或信息栏点「收藏」，常用的文件会集中到这里。')));
     return;
   }
   const card = U.el('div', { class: 'card' });
@@ -890,19 +890,19 @@ async function renderFavorites(main) {
   const recent = await API.get('api/recent/list?limit=40');
   if (recent.recents && recent.recents.length) {
     const recentCard = U.el('div', { class: 'card', style: 'margin-top:14px' }, [
-      U.el('h2', { html: Icons.svg('clock') + ' 最近阅读' }),
+      U.el('h2', { html: Icons.svg('clock') + T(' 最近阅读') }),
       buildFileList(recent.recents, (item) => openInBrowser(item.path)),
     ]);
-    const clear = U.el('button', { class: 'btn', text: '清空最近阅读记录' });
+    const clear = U.el('button', { class: 'btn', text: T('清空最近阅读记录') });
     clear.addEventListener('click', async () => {
       const confirmed = await UI.confirm({
-        title: '清空最近阅读记录？', danger: true,
-        body: '只会清除本应用记录的「最近打开」列表，不会影响任何文件。',
-        confirmText: '清空',
+        title: T('清空最近阅读记录？'), danger: true,
+        body: T('只会清除本应用记录的「最近打开」列表，不会影响任何文件。'),
+        confirmText: T('清空'),
       });
       if (!confirmed) return;
       await API.post('api/recent/clear', {});
-      UI.ok('已清空');
+      UI.ok(T('已清空'));
       Shell.show('favorites');
     });
     recentCard.appendChild(U.el('div', { style: 'margin-top:10px' }, [clear]));
@@ -915,10 +915,10 @@ async function renderFavorites(main) {
 function renderJobs(main) {
   document.body.classList.remove('kb-fullbleed');
   main.innerHTML = '';
-  main.appendChild(U.el('h2', { style: 'margin-top:0', text: '任务' }));
+  main.appendChild(U.el('h2', { style: 'margin-top:0', text: T('任务') }));
   main.appendChild(U.el('div', { class: 'card-hint',
-    text: '扫描与建立索引都在后台进行，可以随时取消或暂停。'
-      + '任务中断后重新启动应用会自动续跑。' }));
+    text: T('扫描与建立索引都在后台进行，可以随时取消或暂停。')
+      + T('任务中断后重新启动应用会自动续跑。') }));
   const body = U.el('div', { class: 'card' });
   main.appendChild(body);
 
@@ -928,11 +928,11 @@ function renderJobs(main) {
       data = await API.get('api/jobs?limit=100');
     } catch (error) {
       body.innerHTML = '';
-      body.appendChild(UI.empty('alert', '无法读取任务', U.esc(error.message || String(error))));
+      body.appendChild(UI.empty('alert', T('无法读取任务'), U.esc(error.message || String(error))));
       return;
     }
     body.innerHTML = '';
-    Jobs.renderTable(body, data.jobs || [], { emptyHint: '还没有任务' });
+    Jobs.renderTable(body, data.jobs || [], { emptyHint: T('还没有任务') });
   }
   Jobs.reload = refresh;
   refresh();
@@ -943,7 +943,18 @@ function renderJobs(main) {
 async function renderSettings(main) {
   document.body.classList.remove('kb-fullbleed');
   main.innerHTML = '';
-  main.appendChild(U.el('h2', { style: 'margin-top:0', text: '设置' }));
+    // 界面语言（放最前：非中文用户进来第一眼就该看到它）
+    // UI.langSelect() 内部已处理「落 localStorage + 套用 + 同步到后端 settings.ui_language」。
+    %(host)s.appendChild(U.el('div', { class: 'card' }, [
+      U.el('h2', {}, [
+        U.el('span', { html: Icons.svg('globe', { size: 17 }) }),
+        U.el('span', { text: T('界面语言') }),
+      ]),
+      U.el('div', { class: 'card-hint',
+        text: T('选择本应用界面的语言。首次打开时会跟随浏览器语言。') }),
+      UI.langSelect(),
+    ]));
+  main.appendChild(U.el('h2', { style: 'margin-top:0', text: T('设置') }));
 
   let settings = {};
   let status = {};
@@ -956,16 +967,16 @@ async function renderSettings(main) {
     State.settings = settings;
     State.allowedRoots = settings.allowed_roots || [];
   } catch (error) {
-    main.appendChild(UI.empty('alert', '无法读取设置', U.esc(error.message || String(error))));
+    main.appendChild(UI.empty('alert', T('无法读取设置'), U.esc(error.message || String(error))));
     return;
   }
 
   // --- 外观 ---
   const themeCard = U.el('div', { class: 'card' }, [
-    U.el('h2', { html: Icons.svg('eye') + ' 外观' }),
+    U.el('h2', { html: Icons.svg('eye') + T(' 外观') }),
   ]);
   const themeRow = U.el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap' });
-  [['system', '跟随系统'], ['light', '浅色'], ['dark', '深色']].forEach((pair) => {
+  [['system', T('跟随系统')], ['light', T('浅色')], ['dark', T('深色')]].forEach((pair) => {
     const button = U.el('button', {
       class: 'btn' + ((settings.theme || 'system') === pair[0] ? '' : ' ghost'),
       text: pair[1],
@@ -983,39 +994,39 @@ async function renderSettings(main) {
 
   // --- 可访问目录 ---
   const rootsCard = U.el('div', { class: 'card', style: 'margin-top:14px' }, [
-    U.el('h2', { html: Icons.svg('folderOpen') + ' 可访问目录' }),
+    U.el('h2', { html: Icons.svg('folderOpen') + T(' 可访问目录') }),
     U.el('div', { class: 'card-hint',
-      text: '只有这里的目录能被本应用读取。知识库必须建立在这些目录之内。' }),
+      text: T('只有这里的目录能被本应用读取。知识库必须建立在这些目录之内。') }),
   ]);
   const rootList = U.el('ul', { class: 'info-list' });
   (settings.allowed_roots || []).forEach((root) => {
     const li = U.el('li', {});
     li.innerHTML = Icons.svg('folder', { size: 15 });
     li.appendChild(U.el('span', { class: 'n', text: root }));
-    const remove = U.el('button', { class: 'icon-btn', html: Icons.svg('x'), title: '移出白名单' });
+    const remove = U.el('button', { class: 'icon-btn', html: Icons.svg('x'), title: T('移出白名单') });
     remove.addEventListener('click', async (event) => {
       event.stopPropagation();
       const next = (settings.allowed_roots || []).filter((item) => item !== root);
       await API.post('api/settings', { allowed_roots: next });
-      UI.ok('已移出白名单（不会删除任何文件）');
+      UI.ok(T('已移出白名单（不会删除任何文件）'));
       Shell.show('settings');
     });
     li.appendChild(remove);
     rootList.appendChild(li);
   });
   if (!(settings.allowed_roots || []).length) {
-    rootList.appendChild(U.el('li', { text: '（还没有添加任何目录）' }));
+    rootList.appendChild(U.el('li', { text: T('（还没有添加任何目录）') }));
   }
   rootsCard.appendChild(rootList);
-  const addRoot = U.el('button', { class: 'btn', text: '＋ 添加目录', style: 'margin-top:10px' });
+  const addRoot = U.el('button', { class: 'btn', text: T('＋ 添加目录'), style: 'margin-top:10px' });
   addRoot.addEventListener('click', () => {
     UI.pickDir({
-      title: '选择允许本应用读取的目录',
+      title: T('选择允许本应用读取的目录'),
       onPick: async (path) => {
         if (!path) return;
         const next = (settings.allowed_roots || []).concat([path]);
         await API.post('api/settings', { allowed_roots: next });
-        UI.ok('已添加：' + path);
+        UI.ok(T('已添加：') + path);
         Shell.show('settings');
       },
     });
@@ -1025,34 +1036,34 @@ async function renderSettings(main) {
 
   // --- 索引 ---
   const indexCard = U.el('div', { class: 'card', style: 'margin-top:14px' }, [
-    U.el('h2', { html: Icons.svg('scan') + ' 索引' }),
+    U.el('h2', { html: Icons.svg('scan') + T(' 索引') }),
   ]);
   const indexInfo = U.el('dl', { class: 'info-kv' });
   const counts = status.counts || {};
   [
-    ['已收录文件', U.num(counts.files || 0)],
-    ['已建立索引', U.num(counts.indexed || 0)],
-    ['等待索引', U.num(counts.pending || 0)],
-    ['无文本层', U.num(counts.unsupported || 0)],
-    ['索引失败', U.num(counts.failed || 0)],
-    ['索引数据占用', status.db_bytes_text || '—'],
+    [T('已收录文件'), U.num(counts.files || 0)],
+    [T('已建立索引'), U.num(counts.indexed || 0)],
+    [T('等待索引'), U.num(counts.pending || 0)],
+    [T('无文本层'), U.num(counts.unsupported || 0)],
+    [T('索引失败'), U.num(counts.failed || 0)],
+    [T('索引数据占用'), status.db_bytes_text || '—'],
   ].forEach((pair) => {
     indexInfo.appendChild(U.el('dt', { text: pair[0] }));
     indexInfo.appendChild(U.el('dd', { text: String(pair[1]) }));
   });
   indexCard.appendChild(indexInfo);
   const reindex = U.el('button', { class: 'btn', style: 'margin-top:10px',
-                                   text: '重建全部全文索引' });
+                                   text: T('重建全部全文索引') });
   reindex.addEventListener('click', async () => {
     const confirmed = await UI.confirm({
-      title: '重建全文索引？',
-      body: '会重新读取所有已收录文件的文本内容。源文件不会被修改，'
-        + '只是重新建立检索索引，可能需要较长时间。',
-      confirmText: '开始重建',
+      title: T('重建全文索引？'),
+      body: T('会重新读取所有已收录文件的文本内容。源文件不会被修改，')
+        + T('只是重新建立检索索引，可能需要较长时间。'),
+      confirmText: T('开始重建'),
     });
     if (!confirmed) return;
     await API.post('api/search/reindex', {});
-    UI.ok('已加入任务队列');
+    UI.ok(T('已加入任务队列'));
     Shell.show('jobs');
   });
   indexCard.appendChild(reindex);
@@ -1060,15 +1071,15 @@ async function renderSettings(main) {
 
   // --- 能力与诊断（售后定位用） ---
   const diagCard = U.el('div', { class: 'card', style: 'margin-top:14px' }, [
-    U.el('h2', { html: Icons.svg('activity') + ' 运行状态' }),
+    U.el('h2', { html: Icons.svg('activity') + T(' 运行状态') }),
   ]);
   const diag = U.el('dl', { class: 'info-kv' });
   [
-    ['版本', status.version || '—'],
+    [T('版本'), status.version || '—'],
     ['SQLite', status.sqlite_version || '—'],
-    ['全文检索 (FTS5)', status.fts5 ? '可用' : '不可用（已降级为模糊匹配）'],
-    ['子串索引 (trigram)', status.trigram ? '可用' : '不可用'],
-    ['数据目录', (status.paths && status.paths.data_dir) || '—'],
+    [T('全文检索 (FTS5)'), status.fts5 ? T('可用') : T('不可用（已降级为模糊匹配）')],
+    [T('子串索引 (trigram)'), status.trigram ? T('可用') : T('不可用')],
+    [T('数据目录'), (status.paths && status.paths.data_dir) || '—'],
   ].forEach((pair) => {
     diag.appendChild(U.el('dt', { text: pair[0] }));
     diag.appendChild(U.el('dd', { text: String(pair[1]) }));
@@ -1082,14 +1093,14 @@ async function renderSettings(main) {
 
   // --- 关于 ---
   const about = U.el('div', { class: 'card', style: 'margin-top:14px' }, [
-    U.el('h2', { html: Icons.svg('info') + ' 关于' }),
+    U.el('h2', { html: Icons.svg('info') + T(' 关于') }),
     U.el('div', { class: 'info-note' }, [
-      U.el('div', { text: '本应用对知识库中的源文件**严格只读**：'
-        + '不修改、不删除、不移动、不改名任何文件。' }),
+      U.el('div', { text: T('本应用对知识库中的源文件**严格只读**：')
+        + T('不修改、不删除、不移动、不改名任何文件。') }),
       U.el('div', { style: 'margin-top:6px',
-        text: '索引数据只保存在应用自己的数据目录里，注销知识库即可清除。' }),
+        text: T('索引数据只保存在应用自己的数据目录里，注销知识库即可清除。') }),
       U.el('div', { style: 'margin-top:6px',
-        text: '全部功能离线可用，应用不发起任何对外网络请求。' }),
+        text: T('全部功能离线可用，应用不发起任何对外网络请求。') }),
     ]),
   ]);
   main.appendChild(about);
@@ -1099,7 +1110,7 @@ async function renderSettings(main) {
 
 function newKnowledgeBase() {
   const nameInput = U.el('input', {
-    type: 'text', placeholder: '例如：产品文档',
+    type: 'text', placeholder: T('例如：产品文档'),
     style: 'width:100%;padding:8px 10px;border:1px solid var(--border);'
       + 'border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text);'
       + 'font-family:inherit;font-size:13.5px',
@@ -1108,14 +1119,14 @@ function newKnowledgeBase() {
     style: 'margin-top:8px;font-family:var(--mono);font-size:12.5px;'
       + 'background:var(--surface-2);border:1px solid var(--border);'
       + 'border-radius:var(--radius-sm);padding:7px 10px;color:var(--text-faint)',
-    text: '还没有选择目录',
+    text: T('还没有选择目录'),
   });
   let chosenPath = '';
 
-  const pickBtn = U.el('button', { class: 'btn', text: '选择文件夹…' });
+  const pickBtn = U.el('button', { class: 'btn', text: T('选择文件夹…') });
   pickBtn.addEventListener('click', () => {
     UI.pickDir({
-      title: '选择要变成知识库的文件夹',
+      title: T('选择要变成知识库的文件夹'),
       onPick: (path) => {
         if (!path) return;
         chosenPath = path;
@@ -1126,20 +1137,20 @@ function newKnowledgeBase() {
   });
 
   const dialog = UI.modal({
-    title: '新建知识库',
+    title: T('新建知识库'),
     bodyHtml: '',
     buttons: [
-      { text: '取消', kind: 'ghost', onclick: (close) => close() },
-      { text: '创建并扫描', kind: '', onclick: async (close) => {
+      { text: T('取消'), kind: 'ghost', onclick: (close) => close() },
+      { text: T('创建并扫描'), kind: '', onclick: async (close) => {
         const name = nameInput.value.trim();
-        if (!name) { UI.warn('请填一个名称'); return; }
-        if (!chosenPath) { UI.warn('请选择文件夹'); return; }
+        if (!name) { UI.warn(T('请填一个名称')); return; }
+        if (!chosenPath) { UI.warn(T('请选择文件夹')); return; }
         try {
           const result = await API.post('api/kb/create', {
             name: name, root_path: chosenPath,
           });
           close();
-          UI.ok('知识库已创建，正在扫描');
+          UI.ok(T('知识库已创建，正在扫描'));
           State.currentKb = result.kb;
           Shell.show('jobs');
         } catch (error) {
@@ -1149,13 +1160,13 @@ function newKnowledgeBase() {
     ],
   });
   dialog.body.appendChild(U.el('div', { class: 'card-hint',
-    text: '给这个知识库起个名字，然后选择它对应的文件夹。' }));
+    text: T('给这个知识库起个名字，然后选择它对应的文件夹。') }));
   dialog.body.appendChild(nameInput);
   dialog.body.appendChild(U.el('div', { style: 'margin-top:12px;display:flex;gap:8px;'
     + 'align-items:center' }, [pickBtn]));
   dialog.body.appendChild(pathBox);
   dialog.body.appendChild(U.el('div', { class: 'info-note', style: 'margin-top:12px',
-    text: '文件夹只会被**读取**。原文件不会被修改、移动或删除。' }));
+    text: T('文件夹只会被**读取**。原文件不会被修改、移动或删除。') }));
   setTimeout(() => nameInput.focus(), 60);
 }
 
@@ -1175,7 +1186,7 @@ const QuickOpen = (() => {
   function draw() {
     list.innerHTML = '';
     if (!items.length) {
-      list.appendChild(U.el('div', { class: 'qp-row', text: '没有匹配的文件' }));
+      list.appendChild(U.el('div', { class: 'qp-row', text: T('没有匹配的文件') }));
       return;
     }
     items.forEach((item, index) => {
@@ -1207,7 +1218,7 @@ const QuickOpen = (() => {
 
   function open(initial) {
     if (mask) { input.focus(); return; }
-    input = U.el('input', { type: 'text', placeholder: '输入文件名…（Enter 打开，Esc 关闭）' });
+    input = U.el('input', { type: 'text', placeholder: T('输入文件名…（Enter 打开，Esc 关闭）') });
     list = U.el('div', { class: 'qp-list' });
     const box = U.el('div', { class: 'qp-box' }, [input, list]);
     mask = U.el('div', { class: 'qp-mask' }, [box]);
@@ -1298,31 +1309,33 @@ function bindShortcuts() {
     const shell = (function () {
       const views = {
         home: {
-          label: '首页', icon: 'home',
+          label: T('首页'), icon: 'home',
           render: (main) => { clearFullbleed(); renderHome(main); },
         },
         browse: {
-          label: '浏览', icon: 'book',
+          label: T('浏览'), icon: 'book',
           render: (main) => { renderBrowse(main); },
         },
         search: {
-          label: '搜索', icon: 'search',
+          label: T('搜索'), icon: 'search',
           render: (main) => { viewState.search = renderSearch(main); },
         },
         favorites: {
-          label: '收藏', icon: 'tag',
+          label: T('收藏'), icon: 'tag',
           render: (main) => { clearFullbleed(); renderFavorites(main); },
         },
         jobs: {
-          label: '任务', icon: 'activity',
+          label: T('任务'), icon: 'activity',
           render: (main) => { clearFullbleed(); renderJobs(main); },
         },
         settings: {
-          label: '设置', icon: 'settings',
+          label: T('设置'), icon: 'settings',
           render: (main) => { clearFullbleed(); renderSettings(main); },
         },
       };
       const base = ShellInit(views, { defaultView: 'home' });
+      // 切语言后重渲染当前视图 —— 框架只换静态文案，动态渲染的部分要靠这个事件
+      Shell.bindLanguage(base);
       base.view = (key) => viewState[key];
       return base;
     })();
@@ -1350,7 +1363,7 @@ function bindShortcuts() {
     const meta = U.byId('kb-meta');
     if (meta) {
       meta.textContent = State.kbs.length
-        ? (State.kbs.length + ' 个知识库')
+        ? (State.kbs.length + T(' 个知识库'))
         : '';
     }
   } catch (error) { /* 首页会再取一次 */ }

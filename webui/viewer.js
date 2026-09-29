@@ -81,9 +81,9 @@ const Viewers = (() => {
     const h = hooks || {};
     const viewer = pick(meta);
     if (!viewer) {
-      host.appendChild(UI.empty('alert', '暫不支持预览',
-        '该格式没有内置查看器。可用「下载」在本地打开，'
-        + '全文检索仍可能命中它的文本内容。'));
+      host.appendChild(UI.empty('alert', T('暫不支持预览'),
+        T('该格式没有内置查看器。可用「下载」在本地打开，')
+        + T('全文检索仍可能命中它的文本内容。')));
       return null;
     }
     const ctx = {
@@ -104,9 +104,9 @@ const Viewers = (() => {
       await viewer.open(ctx);
     } catch (error) {
       host.innerHTML = '';
-      host.appendChild(UI.empty('alert', '打开失败',
+      host.appendChild(UI.empty('alert', T('打开失败'),
         U.esc((error && error.message) || String(error))
-        + '<br>可尝试用「下载」在本地打开。'));
+        + T('<br>可尝试用「下载」在本地打开。')));
     }
     return viewer;
   }
@@ -209,7 +209,7 @@ function renderCode(text, lang, container) {
   if (lines.length > limit) {
     container.appendChild(U.el('div', {
       class: 'tree-empty',
-      text: '文件较长，只显示前 ' + limit + ' 行。可用全文检索定位后面的内容。',
+      text: T('文件较长，只显示前 ') + limit + T(' 行。可用全文检索定位后面的内容。'),
     }));
   }
 }
@@ -272,15 +272,15 @@ Viewers.register({
     });
 
     ctx.controls([
-      { icon: 'plus', title: '放大', onclick: () => { state.fit = false; state.scale = Math.min(12, state.scale * 1.25); apply(); } },
-      { icon: 'minus', title: '缩小', onclick: () => { state.fit = false; state.scale = Math.max(0.08, state.scale / 1.25); apply(); } },
-      { icon: 'refresh', title: '恢复适应窗口', onclick: () => { state.fit = true; state.scale = 1; state.x = 0; state.y = 0; apply(); } },
-      { icon: 'scan', title: '旋转 90°', onclick: () => { state.rotate = (state.rotate + 90) % 360; apply(); } },
-      { icon: 'external', title: '全屏', onclick: () => { if (stage.requestFullscreen) stage.requestFullscreen(); } },
+      { icon: 'plus', title: T('放大'), onclick: () => { state.fit = false; state.scale = Math.min(12, state.scale * 1.25); apply(); } },
+      { icon: 'minus', title: T('缩小'), onclick: () => { state.fit = false; state.scale = Math.max(0.08, state.scale / 1.25); apply(); } },
+      { icon: 'refresh', title: T('恢复适应窗口'), onclick: () => { state.fit = true; state.scale = 1; state.x = 0; state.y = 0; apply(); } },
+      { icon: 'scan', title: T('旋转 90°'), onclick: () => { state.rotate = (state.rotate + 90) % 360; apply(); } },
+      { icon: 'external', title: T('全屏'), onclick: () => { if (stage.requestFullscreen) stage.requestFullscreen(); } },
     ]);
 
     if (ctx.meta.image_w && ctx.meta.image_h) {
-      ctx.info('尺寸', ctx.meta.image_w + ' × ' + ctx.meta.image_h + ' 像素');
+      ctx.info(T('尺寸'), ctx.meta.image_w + ' × ' + ctx.meta.image_h + T(' 像素'));
     }
     return { name: 'image' };
   },
@@ -301,12 +301,12 @@ Viewers.register({
     const pageInput = U.el('input', { type: 'number', min: '1', value: '1',
                                        style: 'width:64px' });
     const pageLabel = U.el('span', { class: 'meta' });
-    const searchInput = U.el('input', { type: 'search', placeholder: '在文档内查找…' });
+    const searchInput = U.el('input', { type: 'search', placeholder: T('在文档内查找…') });
     const searchOut = U.el('span', { class: 'meta' });
     bar.appendChild(U.el('button', { class: 'icon-btn', html: Icons.svg('chevronUp'),
-                                     title: '上一页', onclick: () => go(state.page - 1) }));
+                                     title: T('上一页'), onclick: () => go(state.page - 1) }));
     bar.appendChild(U.el('button', { class: 'icon-btn', html: Icons.svg('chevronDown'),
-                                     title: '下一页', onclick: () => go(state.page + 1) }));
+                                     title: T('下一页'), onclick: () => go(state.page + 1) }));
     bar.appendChild(pageInput);
     bar.appendChild(pageLabel);
     bar.appendChild(U.el('span', { class: 'spacer' }));
@@ -324,11 +324,11 @@ Viewers.register({
     canvasHost.appendChild(canvas);
 
     ctx.controls([
-      { icon: 'plus', title: '放大', onclick: () => { state.scale = Math.min(6, state.scale * 1.2); render(); } },
-      { icon: 'minus', title: '缩小', onclick: () => { state.scale = Math.max(0.25, state.scale / 1.2); render(); } },
-      { icon: 'refresh', title: '实际大小', onclick: () => { state.scale = 1; render(); } },
-      { icon: 'scan', title: '旋转', onclick: () => { state.rotation = (state.rotation + 90) % 360; render(); } },
-      { icon: 'panel', title: '在文档内查找文本' , onclick: () => searchInput.focus() },
+      { icon: 'plus', title: T('放大'), onclick: () => { state.scale = Math.min(6, state.scale * 1.2); render(); } },
+      { icon: 'minus', title: T('缩小'), onclick: () => { state.scale = Math.max(0.25, state.scale / 1.2); render(); } },
+      { icon: 'refresh', title: T('实际大小'), onclick: () => { state.scale = 1; render(); } },
+      { icon: 'scan', title: T('旋转'), onclick: () => { state.rotation = (state.rotation + 90) % 360; render(); } },
+      { icon: 'panel', title: T('在文档内查找文本') , onclick: () => searchInput.focus() },
     ]);
 
     function go(number) {
@@ -362,7 +362,7 @@ Viewers.register({
       } catch (error) {
         if (error && error.name === 'RenderingCancelledException') return;
         canvasHost.innerHTML = '';
-        canvasHost.appendChild(UI.empty('alert', '这一页无法渲染',
+        canvasHost.appendChild(UI.empty('alert', T('这一页无法渲染'),
           U.esc(error && error.message ? error.message : String(error))));
         return;
       }
@@ -383,7 +383,7 @@ Viewers.register({
     async function find(query) {
       const needle = (query || '').trim();
       if (!needle || !state.doc) { searchOut.textContent = ''; return; }
-      searchOut.textContent = '查找中…';
+      searchOut.textContent = T('查找中…');
       const hits = [];
       for (let number = 1; number <= state.doc.numPages; number += 1) {
         const text = await pageText(number);
@@ -391,11 +391,11 @@ Viewers.register({
         if (hits.length >= 50) break;
       }
       if (!hits.length) {
-        searchOut.textContent = '未找到';
+        searchOut.textContent = T('未找到');
         return;
       }
-      searchOut.textContent = '第 ' + hits.slice(0, 12).join(' / ')
-        + ' 页命中' + (hits.length > 12 ? ' 等' : '');
+      searchOut.textContent = T('第 ') + hits.slice(0, 12).join(' / ')
+        + T(' 页命中') + (hits.length > 12 ? T(' 等') : '');
       go(hits[0]);
     }
 
@@ -415,9 +415,9 @@ Viewers.register({
       pdfjsLib.GlobalWorkerOptions.workerSrc = API.url('pdfjs/pdf.worker.min.mjs');
     } catch (error) {
       ctx.host.innerHTML = '';
-      ctx.host.appendChild(UI.empty('alert', 'PDF 阅读器未能加载',
-        '内置的渲染库没有成功载入，请重新打开本应用。'
-        + '<br>该 PDF 仍可「下载」后用本地阅读器打开。'));
+      ctx.host.appendChild(UI.empty('alert', T('PDF 阅读器未能加载'),
+        T('内置的渲染库没有成功载入，请重新打开本应用。')
+        + T('<br>该 PDF 仍可「下载」后用本地阅读器打开。')));
       return { name: 'pdf' };
     }
 
@@ -427,10 +427,10 @@ Viewers.register({
       const message = String((error && error.message) || error);
       const encrypted = /password/i.test(message);
       ctx.host.innerHTML = '';
-      ctx.host.appendChild(UI.empty('lock', encrypted ? '这个 PDF 有密码' : '无法打开这个 PDF',
+      ctx.host.appendChild(UI.empty('lock', encrypted ? T('这个 PDF 有密码') : T('无法打开这个 PDF'),
         encrypted
-          ? '文件已加密，请在本地阅读器里输入口令。<br>为避免把乱码写进索引，它的文本层不会被检索。'
-          : U.esc(message) + '<br>可尝试「下载」后用本地阅读器打开。'));
+          ? T('文件已加密，请在本地阅读器里输入口令。<br>为避免把乱码写进索引，它的文本层不会被检索。')
+          : U.esc(message) + T('<br>可尝试「下载」后用本地阅读器打开。')));
       return { name: 'pdf' };
     }
 
@@ -442,10 +442,10 @@ Viewers.register({
       state.scale = Math.max(0.4, Math.min(2.5, available / natural.width));
     } catch (error) { /* 用默认 1.0 */ }
 
-    ctx.info('页数', String(state.doc.numPages) + ' 页');
+    ctx.info(T('页数'), String(state.doc.numPages) + T(' 页'));
     if (ctx.meta.note) ctx.note(ctx.meta.note, 'warn');
     else if (ctx.meta.text_state === 'ok') {
-      ctx.info('文本层', '已索引，可在全文检索中命中并定位到页');
+      ctx.info(T('文本层'), T('已索引，可在全文检索中命中并定位到页'));
     }
     await render();
 
@@ -475,9 +475,9 @@ Viewers.register({
       title: ctx.meta.name,
     }));
     ctx.host.appendChild(host);
-    ctx.note('HTML 以沙箱方式呈现：脚本、表单与外部请求都被禁用。', null);
+    ctx.note(T('HTML 以沙箱方式呈现：脚本、表单与外部请求都被禁用。'), null);
     ctx.controls([
-      { icon: 'external', title: '在新标签页打开', onclick: () => window.open(ctx.apiUrl('api/file/view'), '_blank', 'noopener') },
+      { icon: 'external', title: T('在新标签页打开'), onclick: () => window.open(ctx.apiUrl('api/file/view'), '_blank', 'noopener') },
     ]);
     return { name: 'html' };
   },
@@ -494,28 +494,28 @@ function documentViewer(id, kinds, endpoint) {
     async open(ctx) {
       const holder = U.el('div', { class: 'kb-viewer-body', style: 'flex:1;overflow:auto' });
       const reader = U.el('div', { class: 'reader' }, [
-        U.el('div', { class: 'tree-empty', text: '正在渲染…' }),
+        U.el('div', { class: 'tree-empty', text: T('正在渲染…') }),
       ]);
       holder.appendChild(reader);
       ctx.host.appendChild(holder);
 
       const outlineHost = [];
       ctx.controls([
-        { icon: 'minus', title: '收窄阅读宽度', onclick: () => { document.body.classList.remove('reader-wide', 'reader-full'); } },
-        { icon: 'panel', title: '加宽阅读宽度', onclick: () => { document.body.classList.add('reader-wide'); document.body.classList.remove('reader-full'); } },
-        { icon: 'scan', title: '全宽', onclick: () => { document.body.classList.add('reader-full'); document.body.classList.remove('reader-wide'); } },
+        { icon: 'minus', title: T('收窄阅读宽度'), onclick: () => { document.body.classList.remove('reader-wide', 'reader-full'); } },
+        { icon: 'panel', title: T('加宽阅读宽度'), onclick: () => { document.body.classList.add('reader-wide'); document.body.classList.remove('reader-full'); } },
+        { icon: 'scan', title: T('全宽'), onclick: () => { document.body.classList.add('reader-full'); document.body.classList.remove('reader-wide'); } },
       ]);
 
       try {
         const data = await API.get(endpoint + '?path=' + encodeURIComponent(ctx.meta.path));
-        if (!data.ok) throw new Error(data.error || '渲染失败');
+        if (!data.ok) throw new Error(data.error || T('渲染失败'));
         // ⚠️ 这里的 html 是**服务端转义后**生成的（app/render.py），
         // 不是原始文件内容 —— 直接插入是安全的。见 tests/test_render.py。
         reader.innerHTML = data.html || '';
         if (data.truncated) {
-          ctx.note('文件较长，只索引并显示了前面一部分。', 'warn');
+          ctx.note(T('文件较长，只索引并显示了前面一部分。'), 'warn');
         }
-        if (data.encoding) ctx.info('编码', data.encoding);
+        if (data.encoding) ctx.info(T('编码'), data.encoding);
         const headings = reader.querySelectorAll('h1, h2, h3, h4');
         headings.forEach((node, index) => { node.id = 'sec-' + index; });
         if (headings.length) {
@@ -525,8 +525,8 @@ function documentViewer(id, kinds, endpoint) {
         }
       } catch (error) {
         reader.innerHTML = '';
-        reader.appendChild(UI.empty('alert', '无法渲染',
-          U.esc(error.message || String(error)) + '<br>可尝试「下载」后本地打开。'));
+        reader.appendChild(UI.empty('alert', T('无法渲染'),
+          U.esc(error.message || String(error)) + T('<br>可尝试「下载」后本地打开。')));
       }
       return { name: id };
     },
@@ -545,23 +545,23 @@ Viewers.register({
   canOpen: (meta, kind) => kind === 'pptx',
   async open(ctx) {
     const holder = U.el('div', { class: 'kb-viewer-body', style: 'flex:1;overflow:auto;padding:0 18px 40px' });
-    holder.appendChild(U.el('div', { class: 'tree-empty', text: '正在解析…' }));
+    holder.appendChild(U.el('div', { class: 'tree-empty', text: T('正在解析…') }));
     ctx.host.appendChild(holder);
     try {
       const data = await API.get('api/file/html?path=' + encodeURIComponent(ctx.meta.path));
       holder.innerHTML = '';
-      if (!data.ok || !data.slides) throw new Error(data.error || '解析失败');
+      if (!data.ok || !data.slides) throw new Error(data.error || T('解析失败'));
       data.slides.forEach((slide) => {
         holder.appendChild(U.el('div', { class: 'slide-card', dataset: { slide: slide.index } }, [
-          U.el('div', { class: 'no', text: '第 ' + slide.index + ' 页' }),
+          U.el('div', { class: 'no', text: T('第 ') + slide.index + T(' 页') }),
           slide.title ? U.el('h3', { text: slide.title }) : null,
           U.el('div', { html: slide.html || '' }),
         ]));
       });
-      ctx.info('页数', data.slides.length + ' 页');
-      ctx.note('演示文稿按页提取文字呈现，不还原原始版式。', null);
+      ctx.info(T('页数'), data.slides.length + T(' 页'));
+      ctx.note(T('演示文稿按页提取文字呈现，不还原原始版式。'), null);
       ctx.outline(data.slides.map((slide) => ({
-        label: '第 ' + slide.index + ' 页' + (slide.title ? '：' + slide.title : ''),
+        label: T('第 ') + slide.index + T(' 页') + (slide.title ? '：' + slide.title : ''),
         onclick: () => {
           const node = holder.querySelector('[data-slide="' + slide.index + '"]');
           if (node) node.scrollIntoView({ block: 'start' });
@@ -569,8 +569,8 @@ Viewers.register({
       })));
     } catch (error) {
       holder.innerHTML = '';
-      holder.appendChild(UI.empty('alert', '无法解析',
-        U.esc(error.message || String(error)) + '<br>可尝试「下载」后本地打开。'));
+      holder.appendChild(UI.empty('alert', T('无法解析'),
+        U.esc(error.message || String(error)) + T('<br>可尝试「下载」后本地打开。')));
     }
     return { name: 'slides' };
   },
@@ -590,8 +590,8 @@ Viewers.register({
     const bar = U.el('div', { class: 'kb-toolbar' });
     const sheetSel = U.el('select');
     const pageInfo = U.el('span', { class: 'meta' });
-    const copyBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('copy') + ' 复制本页' });
-    bar.appendChild(U.el('span', { class: 'meta', text: '工作表' }));
+    const copyBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('copy') + T(' 复制本页') });
+    bar.appendChild(U.el('span', { class: 'meta', text: T('工作表') }));
     bar.appendChild(sheetSel);
     bar.appendChild(U.el('span', { class: 'spacer' }));
     bar.appendChild(pageInfo);
@@ -599,8 +599,8 @@ Viewers.register({
 
     const grid = U.el('div', { class: 'sheet-grid' });
     const foot = U.el('div', { class: 'sheet-foot' });
-    const prev = U.el('button', { class: 'icon-btn', html: Icons.svg('chevronUp') + ' 上一页' });
-    const next = U.el('button', { class: 'icon-btn', html: Icons.svg('chevronDown') + ' 下一页' });
+    const prev = U.el('button', { class: 'icon-btn', html: Icons.svg('chevronUp') + T(' 上一页') });
+    const next = U.el('button', { class: 'icon-btn', html: Icons.svg('chevronDown') + T(' 下一页') });
     const label = U.el('span', { class: 'meta' });
     foot.appendChild(prev); foot.appendChild(next);
     foot.appendChild(U.el('span', { class: 'spacer' }));
@@ -608,7 +608,7 @@ Viewers.register({
 
     const shell = U.el('div', { class: 'sheet-host' }, [bar, grid, foot]);
     ctx.host.appendChild(shell);
-    grid.appendChild(U.el('div', { class: 'tree-empty', text: '正在读取…' }));
+    grid.appendChild(U.el('div', { class: 'tree-empty', text: T('正在读取…') }));
 
     async function loadSheet() {
       try {
@@ -616,7 +616,7 @@ Viewers.register({
           + encodeURIComponent(ctx.meta.path)
           + '&sheet=' + state.sheet
           + '&offset=' + state.offset + '&limit=' + state.limit);
-        if (!data.ok) throw new Error(data.error || '无法读取表格');
+        if (!data.ok) throw new Error(data.error || T('无法读取表格'));
         state.data = data;
         state.total = data.total_rows;
         state.hasMore = !!data.has_more;
@@ -630,8 +630,8 @@ Viewers.register({
         draw();
       } catch (error) {
         grid.innerHTML = '';
-        grid.appendChild(UI.empty('alert', '无法读取表格',
-          U.esc(error.message || String(error)) + '<br>可尝试「下载」后本地打开。'));
+        grid.appendChild(UI.empty('alert', T('无法读取表格'),
+          U.esc(error.message || String(error)) + T('<br>可尝试「下载」后本地打开。')));
       }
     }
 
@@ -660,15 +660,15 @@ Viewers.register({
       const from = data.rows && data.rows.length ? data.rows[0].r : 0;
       const to = data.rows && data.rows.length ? data.rows[data.rows.length - 1].r : 0;
       label.textContent = to
-        ? ('第 ' + from + '–' + to + ' 行' + (state.total ? ' / 共 ' + state.total + ' 行' : ''))
-        : '没有数据';
-      pageInfo.textContent = state.total ? ('共 ' + state.total + ' 行') : '';
+        ? (T('第 ') + from + '–' + to + T(' 行') + (state.total ? T(' / 共 ') + state.total + T(' 行') : ''))
+        : T('没有数据');
+      pageInfo.textContent = state.total ? (T('共 ') + state.total + T(' 行')) : '';
       prev.disabled = state.offset <= 0;
       next.disabled = !state.hasMore;
-      if (data.encoding) ctx.info('编码', data.encoding);
-      ctx.info('列数', String((data.columns || []).length));
-      if (state.total) ctx.info('行数', String(state.total));
-      else ctx.note('本机未读取到工作表的精确行数，翻到末尾即可确认。', null);
+      if (data.encoding) ctx.info(T('编码'), data.encoding);
+      ctx.info(T('列数'), String((data.columns || []).length));
+      if (state.total) ctx.info(T('行数'), String(state.total));
+      else ctx.note(T('本机未读取到工作表的精确行数，翻到末尾即可确认。'), null);
     }
 
     prev.addEventListener('click', () => {
@@ -689,9 +689,9 @@ Viewers.register({
         .concat(data.rows.map((row) => row.c.map((c) => String(c)).join('\t')));
       try {
         await navigator.clipboard.writeText(lines.join('\n'));
-        UI.ok('已复制本页 ' + data.rows.length + ' 行');
+        UI.ok(T('已复制本页 ') + data.rows.length + T(' 行'));
       } catch (error) {
-        UI.warn('浏览器未允许写入剪贴板，请手动选择后复制');
+        UI.warn(T('浏览器未允许写入剪贴板，请手动选择后复制'));
       }
     });
 
@@ -710,8 +710,8 @@ Viewers.register({
   async open(ctx) {
     const state = { offset: 0, text: '', wrap: false, lang: '' };
     const bar = U.el('div', { class: 'kb-toolbar' });
-    const wrapBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('type') + ' 自动换行' });
-    const findInput = U.el('input', { type: 'search', placeholder: '在此文件中查找…' });
+    const wrapBtn = U.el('button', { class: 'icon-btn', html: Icons.svg('type') + T(' 自动换行') });
+    const findInput = U.el('input', { type: 'search', placeholder: T('在此文件中查找…') });
     const findOut = U.el('span', { class: 'meta' });
     bar.appendChild(wrapBtn);
     bar.appendChild(U.el('span', { class: 'spacer' }));
@@ -727,18 +727,18 @@ Viewers.register({
         const data = await API.get('api/file/text?path='
           + encodeURIComponent(ctx.meta.path)
           + '&offset=' + state.offset + '&limit=' + (256 * 1024));
-        if (!data.ok) throw new Error(data.error || '无法读取文件');
+        if (!data.ok) throw new Error(data.error || T('无法读取文件'));
         state.text = more ? state.text + data.text : data.text;
         state.lang = ctx.meta.lang || data.lang || '';
-        if (data.encoding) ctx.info('编码', data.encoding);
+        if (data.encoding) ctx.info(T('编码'), data.encoding);
         if (data.truncated && !more) {
-          ctx.note('这是文件的开始部分。点「继续读取」可加载更多。', null);
+          ctx.note(T('这是文件的开始部分。点「继续读取」可加载更多。'), null);
         }
         draw(more);
         if (data.has_more) {
           state.offset = data.next_offset;
           if (!bar.querySelector('.more')) {
-            const more = U.el('button', { class: 'icon-btn more', text: '继续读取…' });
+            const more = U.el('button', { class: 'icon-btn more', text: T('继续读取…') });
             more.addEventListener('click', () => load(true));
             bar.insertBefore(more, findInput);
           }
@@ -748,7 +748,7 @@ Viewers.register({
         }
       } catch (error) {
         wrap.innerHTML = '';
-        wrap.appendChild(UI.empty('alert', '无法读取',
+        wrap.appendChild(UI.empty('alert', T('无法读取'),
           U.esc(error.message || String(error))));
       }
     }
@@ -808,7 +808,7 @@ Viewers.register({
         }
         cell.appendChild(document.createTextNode(text.slice(last)));
       });
-      findOut.textContent = hits ? hits + ' 处命中' : '未找到';
+      findOut.textContent = hits ? hits + T(' 处命中') : T('未找到');
     });
 
     await load(false);
@@ -829,7 +829,7 @@ Viewers.register({
       ? U.el('audio', { controls: true, src: ctx.url(), preload: 'metadata' })
       : U.el('video', { controls: true, playsinline: true, src: ctx.url(), preload: 'metadata' });
     ctx.host.appendChild(U.el('div', { class: 'media-host' }, [node]));
-    ctx.note('播放器由浏览器提供。若该编码不被浏览器支持，可「下载」后用本地播放器打开。', null);
+    ctx.note(T('播放器由浏览器提供。若该编码不被浏览器支持，可「下载」后用本地播放器打开。'), null);
     return { name: 'media', destroy() { try { node.pause(); } catch (error) { /* 忽略 */ } } };
   },
 });
@@ -844,14 +844,14 @@ Viewers.register({
   async open(ctx) {
     const list = U.el('div', { style: 'padding:14px 16px' });
     ctx.host.appendChild(list);
-    list.appendChild(U.el('div', { class: 'tree-empty', text: '正在读取…' }));
+    list.appendChild(U.el('div', { class: 'tree-empty', text: T('正在读取…') }));
     try {
       const kbId = ctx.meta.kb_id;
       const rel = ctx.meta.rel_path;
       const data = await API.get('api/kb/' + kbId + '/tree?parent=' + encodeURIComponent(rel));
       list.innerHTML = '';
       if (!data.entries || !data.entries.length) {
-        list.appendChild(UI.empty('inbox', '这个目录是空的', '里面没有已收录的文件。'));
+        list.appendChild(UI.empty('inbox', T('这个目录是空的'), T('里面没有已收录的文件。')));
         return { name: 'dir' };
       }
       const ul = U.el('ul', { class: 'info-list' });
@@ -859,7 +859,7 @@ Viewers.register({
         const li = U.el('li', {}, [
           U.el('span', { html: Icons.svg(entry.is_dir ? 'folder' : entry.icon.value, { size: 15 }) }),
           U.el('span', { class: 'n', text: entry.name }),
-          U.el('span', { class: 'r', text: entry.is_dir ? '目录' : U.size(entry.size) }),
+          U.el('span', { class: 'r', text: entry.is_dir ? T('目录') : U.size(entry.size) }),
         ]);
         li.addEventListener('click', () => {
           if (ctx.hook.open) ctx.hook.open(entry.path, entry);
@@ -867,10 +867,10 @@ Viewers.register({
         ul.appendChild(li);
       });
       list.appendChild(ul);
-      ctx.info('条目数', String(data.entries.length));
+      ctx.info(T('条目数'), String(data.entries.length));
     } catch (error) {
       list.innerHTML = '';
-      list.appendChild(UI.empty('alert', '无法读取目录', U.esc(error.message || String(error))));
+      list.appendChild(UI.empty('alert', T('无法读取目录'), U.esc(error.message || String(error))));
     }
     return { name: 'dir' };
   },

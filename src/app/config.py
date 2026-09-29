@@ -6,7 +6,7 @@ TOS 7 只预装 python3 / nginx / systemd）。所以本应用不 import 任何 
 """
 
 APP_ID = "shh19-knowledge"
-APP_VERSION = "1.0.2"
+APP_VERSION = "1.0.025"
 TITLE = "知识库阅读器"
 
 # ---- 扫描上限（都是有界增长所必需的，README 的运行时文件清单里逐条对应）----
